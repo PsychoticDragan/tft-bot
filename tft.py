@@ -1,8 +1,6 @@
 # Detergent's TFT Bot
 # Branch: main
 
-
-# TODO: UP TO DATE WITH LATEST VERSION OF TFT luv u detergent from darkflame
 import pkg_resources
 
 pkg_resources.require("PyAutoGUI==0.9.50")
@@ -91,7 +89,6 @@ def start():
 
 def buy(iterations):
     for i in range(iterations):
-        #updated troops
         click_to("./captures/ziggs.png")
         click_to("./captures/lulu.png")
         click_to("./captures/kled.png")
@@ -100,30 +97,29 @@ def buy(iterations):
         click_to("./captures/gragas.png")
         click_to("./captures/vlad.png")
 
-#new function, get the item from 2-2 and 3-2, working properly
+
 def buy_item():
-    if onscreen("./captures/2-2.png"):
-        auto.moveTo(734,974)
-        click_left()
-    if onscreen("./captures/3-2.png"):
-        auto.moveTo(734,974)
-        click_left()
-    
-def checks(): #added checks to see if game was inturrupted 
+    click_to("./captures/choose_one.png")  # changed this to just another image that it clicks.
+
+
+def checks():
     if onscreen("./captures/play again.png"):
+        won_match()
+    if onscreen("./captures/dead.PNG"):
+        click_to("./captures/dead.PNG")
         won_match()
     if onscreen("./captures/reconnect.png"):
         print("reconnecting!")
         time.sleep(0.5)
         click_to("./captures/reconnect.png")
 
+
 def main():
     while not onscreen("./captures/2-4.png"):
         buy(1)
-        #new feature  IT WORKS AAAAAAA
         buy_item()
         time.sleep(1)
-        checks() #added checks to see if game was inturrupted 
+        checks()
     while onscreen("./captures/2-4.png"):
         auto.moveTo(928, 396)
         click_right()
@@ -132,35 +128,37 @@ def main():
     time.sleep(5)
     
     if onscreen("./captures/2-5.png"):
-        while not onscreen("./captures/3-4.png"): # change this if you want to surrender at a different stage
+        while not onscreen("./captures/6-6.png"):
             buy(1)
             buy_item()
             click_to("./captures/reroll.png")
             time.sleep(1)
-            checks() #added checks to see if game was inturrupted 
-            
-    if onscreen("./captures/3-4.png"): # (and this)
+            checks()
         print("Surrendering now!")
         surrender()
 
-def end_match():
-    while onscreen("./captures/missions ok.png"):
-        click_to("./captures/missions ok.png")
-        time.sleep(2)
-    while onscreen("./captures/skip waiting for stats.png"):
-        click_to("./captures/skip waiting for stats.png")
-    time.sleep(5)
-    while onscreen("./captures/play again.png"):
-        click_to("./captures/play again.png")
 
-def won_match(): #Added wonmatch case
-    print("Looks like we won! Re-queuing")
+def end_match():
+    while not onscreen("./captures/find match ready.png"):
+        while onscreen("./captures/missions ok.png"):
+            click_to("./captures/missions ok.png")
+            time.sleep(2)
+        while onscreen("./captures/skip waiting for stats.png"):
+            click_to("./captures/skip waiting for stats.png")
+        time.sleep(5)
+        while onscreen("./captures/play again.png"):
+            click_to("./captures/play again.png")
+
+
+def won_match():
+    print("Looks like the match is over! Re-queuing")
     time.sleep(3)
 
     end_match()
 
     time.sleep(5)
     queue()
+
     
 def surrender():
     click_to("./captures/settings.png")
