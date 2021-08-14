@@ -89,25 +89,27 @@ def start():
 
 def buy(iterations):
     for i in range(iterations):
+        #updated troops
         click_to("./captures/ziggs.png")
         click_to("./captures/lulu.png")
         click_to("./captures/kled.png")
         click_to("./captures/kennen.png")
-        click_to("./captures/poppy.png")
-        click_to("./captures/gragas.png")
+        click_to("./capturespoppy.png")
+        click_to("./captures/tristana.png")
         click_to("./captures/vlad.png")
 
 
+#new function, get the item from 2-2 and 3-2, working properly
 def buy_item():
-    click_to("./captures/choose_one.png")  # changed this to just another image that it clicks.
+    click_to("./captures/choose_one.png")    #changed this to just another image that it clicks.
 
-
-def checks():
+    
+def checks(): #added checks to see if game was interrupted 
     if onscreen("./captures/play again.png"):
         won_match()
-    if onscreen("./captures/dead.PNG"):
-        click_to("./captures/dead.PNG")
-        won_match()
+    if onscreen("./captures/dead.PNG"):   #added another check for if you actually lose in cases where you surrender at a later time. 
+            click_to("./captures/dead.PNG")
+            won_match()
     if onscreen("./captures/reconnect.png"):
         print("reconnecting!")
         time.sleep(0.5)
@@ -119,38 +121,38 @@ def main():
         buy(1)
         buy_item()
         time.sleep(1)
-        checks()
+        checks() 
     while onscreen("./captures/2-4.png"):
         auto.moveTo(928, 396)
         click_right()
         time.sleep(0.25)
 
     time.sleep(5)
-    
+
     if onscreen("./captures/2-5.png"):
-        while not onscreen("./captures/6-6.png"):
+        while not onscreen("./captures/6-6.png"): # change this if you want to surrender at a different stage, also the image recognition struggles with 5 being it sees it as 3 so i had to do 6 as that's seen as a 5
             buy(1)
             buy_item()
             click_to("./captures/reroll.png")
             time.sleep(1)
-            checks()
-        print("Surrendering now!")
+            checks() 
+        print("Surrendering now!") #moved these two lines out of the if statement to make it more streamline.
         surrender()
 
 
 def end_match():
-    while not onscreen("./captures/find match ready.png"):
+    while not onscreen("./captures/find match ready.png"):   #added a main loop for the end match function to ensure you make it to the find match button.
         while onscreen("./captures/missions ok.png"):
             click_to("./captures/missions ok.png")
             time.sleep(2)
         while onscreen("./captures/skip waiting for stats.png"):
             click_to("./captures/skip waiting for stats.png")
-        time.sleep(5)
+            time.sleep(5)
         while onscreen("./captures/play again.png"):
             click_to("./captures/play again.png")
-
-
-def won_match():
+            
+            
+def won_match(): 
     print("Looks like the match is over! Re-queuing")
     time.sleep(3)
 
@@ -164,9 +166,11 @@ def surrender():
     click_to("./captures/settings.png")
 
     while not onscreen("./captures/surrender 1.png"):
+        click_to("./captures/settings.png")      #added this in case it gets interrupted or misses
         time.sleep(1)
     while not onscreen("./captures/surrender 2.png"):
         click_to("./captures/surrender 1.png")
+        checks()     #added a check here for the rare case that the game ended before the surrender finished.
 
     time.sleep(1)
     click_to("./captures/surrender 2.png")
